@@ -1,5 +1,7 @@
 use std::str;
 
+use arrow::datatypes::SchemaRef;
+
 use crate::{Error, Result, Statement};
 
 /// Information about a column of a DuckDB query.
@@ -24,6 +26,15 @@ impl Column<'_> {
 }
 
 impl Statement<'_> {
+    /// Get the arrow schema in the result set of the prepared statement.
+    ///
+    /// If associated DB schema can be altered concurrently, you should make
+    /// sure that current statement has already been stepped once before
+    /// calling this method.
+    pub fn schema(&self) -> SchemaRef {
+        self.stmt.schema()
+    }
+
     /// Get all the column names in the result set of the prepared statement.
     ///
     /// If associated DB schema can be altered concurrently, you should make
